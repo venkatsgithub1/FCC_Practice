@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+		<script>
+			$(document).ready (function () {
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(
+						function (pos) {
+							var coord=pos.coords;
+							var lat=coord.latitude;
+							var long=coord.longitude;
+							var res;
+							$.ajax ({
+								url:'http://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+long+'&appid=bfae004f45fecd46495660641b9b04fe',
+								success:function (data) {
+									$("#res").css("display","block");
+									res=data;
+									var imgObj={
+												showerRain: "https://cdn.pixabay.com/photo/2014/04/05/11/39/rain-316579_960_720.jpg",
+									            rain:"https://cdn.pixabay.com/photo/2015/08/02/15/05/drip-871152_960_720.jpg",
+									            thunderStorm:"https://cdn.pixabay.com/photo/2016/02/07/13/23/castle-1184638_960_720.jpg",
+									            snow: "http://www.publicdomainpictures.net/pictures/20000/velka/trees-in-the-snow-1321633816Vfq.jpg",
+									            mist: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Approaching_mist.jpg",
+									            brokenClouds:"https://cdn.pixabay.com/photo/2014/04/23/19/23/clouds-330768_960_720.jpg",
+									            scatteredClouds:"https://c1.staticflickr.com/6/5457/30520906792_72f498dc66_b.jpg",
+									            fewClouds:"http://www.publicdomainpictures.net/pictures/30000/velka/blue-sky-with-clouds.jpg",
+									            clearSky:"https://cdn.pixabay.com/photo/2016/11/29/08/40/bird-1868488_960_720.jpg",
+												haze:"https://upload.wikimedia.org/wikipedia/commons/1/17/Haze_in_Kuala_Lumpur.jpg"
+									}
+									
+									//shower rain: "https://cdn.pixabay.com/photo/2014/04/05/11/39/rain-316579_960_720.jpg",
+									//rain:"https://cdn.pixabay.com/photo/2015/08/02/15/05/drip-871152_960_720.jpg",
+									//thunderStorm:"https://cdn.pixabay.com/photo/2016/02/07/13/23/castle-1184638_960_720.jpg",
+									//snow: "http://www.publicdomainpictures.net/pictures/20000/velka/trees-in-the-snow-1321633816Vfq.jpg",
+									//mist: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Approaching_mist.jpg",
+									//brokenClouds:"https://cdn.pixabay.com/photo/2014/04/23/19/23/clouds-330768_960_720.jpg",
+									//scatteredClouds:"https://c1.staticflickr.com/6/5457/30520906792_72f498dc66_b.jpg",
+									//fewClouds:"http://www.publicdomainpictures.net/pictures/30000/velka/blue-sky-with-clouds.jpg",
+									//clearSky:"https://cdn.pixabay.com/photo/2016/11/29/08/40/bird-1868488_960_720.jpg",
+									//var imgObj={clearSky:"http://4.bp.blogspot.com/-BPx248lQzEs/UbShh0ByDDI/AAAAAAAAAzs/42T5CsjeJMc/s1600/2013-06-09+17.47.08.jpg",fewClouds:"http://4.bp.blogspot.com/-1MJTFcR87Ok/TnlXwplVviI/AAAAAAAAAzk/n0m9s6ABU_M/s1600/rohrschach.JPG",haze:"http://www.publicdomainpictures.net/pictures/20000/velka/trees-in-the-snow-1321633816Vfq.jpg"}
+									var weatherImg=[{clearSky:"01d.png",
+													fewClouds:"02d.png",
+													scatteredClouds:"03d.png",
+													brokenClouds:"04d.png",
+													showerRain:"09d.png",
+													rain:"10d.png",
+													thunderstorm:"11d.png",
+													snow:"13d.png",
+													mist:"50d.png",
+													haze:"50d.png"
+													},
+													{clearSky:"01n.png",
+													fewClouds:"02n.png",
+													scatteredClouds:"03n.png",
+													brokenClouds:"04n.png",
+													showerRain:"09n.png",
+													rain:"10n.png",
+													thunderstorm:"11n.png",
+													snow:"13n.png",
+													mist:"50n.png",
+													haze:"50n.png"
+													}];
+									var fixWeatherImg;
+									var fixImg;
+									var degreeCel=String.fromCharCode(176)+"C";
+									var degreeFar=String.fromCharCode(176)+"C";
+									$(".allowAccess").css("display","none");
+									//$("#weatherImg").property("src", "http://openweathermap.org/img/w/"+);
+									//$("#location").text("Location is: "+res.name);
+									$("h1").text("Weather at "+res.name);
+									if (res.weather[0].description=="clear sky") {
+										fixImg=imgObj.clearSky;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].clearSky:weatherImg[0].clearSky;
+										$("p,span,h1").css("color","white");
+									} else if (res.weather[0].description=="few clouds") {
+										fixImg=imgObj.fewClouds;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].fewClouds:weatherImg[0].fewClouds;
+										$("p,span, h1").css("color","white");
+									} else if (res.weather[0].description=="scattered clouds") {
+										fixImg=imgObj.scatteredClouds;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].scatteredClouds:weatherImg[0].scatteredClouds;
+										$("p,span, h1").css("color","white");
+									} else if (res.weather[0].description=="broken clouds") {
+										fixImg=imgObj.brokenClouds;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].brokenClouds:weatherImg[0].brokenClouds;
+										$("p,span, h1").css("color","white");
+									} else if (res.weather[0].description=="shower rain") {
+										fixImg=imgObj.showerRain;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].showerRain:weatherImg[0].showerRain;
+										$("p,span,h1").css("color","black");
+									} else if (res.weather[0].description=="rain") {
+										fixImg=imgObj.rain;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].rain:weatherImg[0].rain;
+										$("p,span,h1").css("color","white");
+									} else if (res.weather[0].description=="thunderstorm") {
+										fixImg=imgObj.thunderstorm;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].thunderstorm:weatherImg[0].thunderstorm;
+										$("p,span,h1").css("color","white");
+									} else if (res.weather[0].description=="snow") {
+										fixImg=imgObj.snow;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].snow:weatherImg[0].snow;
+										$("p,span,h1").css("color","black");
+									} else if (res.weather[0].description=="mist") {
+										fixImg=imgObj.mist;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].mist:weatherImg[0].mist;
+										$("p,span,h1").css("color","black");
+									}
+									 else if (res.weather[0].description=="haze") {
+										fixImg=imgObj.haze;
+										fixWeatherImg=new Date().getHours()-12>0?weatherImg[1].haze:weatherImg[0].haze;
+										$("p,span,h1").css("color","white");
+									}
+										$("body").css({"background-image": "url('"+fixImg+"')",
+											"background-size":"100%"
+										});
+										$("#weatherIcon").attr ("src","http://openweathermap.org/img/w/"+fixWeatherImg);
+									//$("#weatherSummary").text("Weather is "+res.weather[0].main+" with an Average temperature of "+(res.main.temp-273.15).toFixed(2)+degreeCel+" and temperatures ranging between "+(res.main.temp_max-273.15)+degreeCel+" and "+(res.main.temp_min-273.15)+degreeCel+".");
+									$("#avgTemp").text("Temperature is "+(res.main.temp-273.15).toFixed(2)+degreeCel);
+									$("#tempVal").text((res.main.temp-273.15).toFixed(2));
+									$("#weatherSummary").text("Expect "+res.weather[0].description);
+									$("#maxTemp").text("Max "+(res.main.temp_max-273.15).toFixed(2)+degreeCel);
+									$("#maxTempVal").text(res.main.temp_max-273.15);
+									$("#minTemp").text("Min "+(res.main.temp_min-273.15).toFixed(2)+degreeCel);
+									$("#minTempVal").text(res.main.temp_min-273.15);
+									$("#celOrFar").text("C");
+								}});
+						}
+					);
+				}
+				$("#celFar").click (function () {
+					var celOrFar=$("#celOrFar").text();
+					var tempVal;
+					var maxTempVal;
+					var minTempVal;
+					var degreeFar=String.fromCharCode(176)+"F";
+					var degreeCel=String.fromCharCode(176)+"C";
+					if (celOrFar=="C") {
+						tempVal=celToFarVv($("#tempVal").text(), true);
+						maxTempVal=celToFarVv($("#maxTempVal").text(), true);
+						minTempVal=celToFarVv($("#minTempVal").text(), true);
+						$("#avgTemp").text("Temperature is "+tempVal+degreeFar);
+						$("#tempVal").text(tempVal);
+						$("#maxTemp").text("Max "+maxTempVal+degreeFar);
+						$("#maxTempVal").text(maxTempVal);
+						$("#minTemp").text("Min "+minTempVal+degreeFar);
+						$("#minTempVal").text(minTempVal);
+					} else {
+						tempVal=celToFarVv($("#tempVal").text(), false);
+						maxTempVal=celToFarVv($("#maxTempVal").text(), false);
+						minTempVal=celToFarVv($("#minTempVal").text(), false);
+						$("#avgTemp").text("Temperature is "+tempVal+degreeCel);
+						$("#tempVal").text(tempVal);
+						$("#maxTemp").text("Max "+maxTempVal+degreeCel);
+						$("#maxTempVal").text(maxTempVal);
+						$("#minTemp").text("Min "+minTempVal+degreeCel);
+						$("#minTempVal").text(minTempVal);
+					}
+					$("#celOrFar").text(celOrFar=="C"?"F":"C");
+				});
+			});
+			
+			function celToFarVv(val, isCelToFah) {
+				if (isCelToFah) {
+					return (parseFloat(val)*9/5+32).toFixed(2);
+				}
+				return ((parseFloat(val)-32)*5/9).toFixed(2);
+			}
+		</script>
+		<style>
+			.h1Style:hover{
+				color:red;
+			}
+			.h1Style{
+				color:#54b2a9;
+				/*background-color:#ACE5EE;*/
+				font-family: 'Playfair Display', serif;
+			}
+			.h1Bg {
+				background-color:(255,255,255,0.25);
+			}
+			p, span {
+				font-family: 'Josefin Sans', sans-serif;
+				color:white;
+				text-align:center;
+				font-size:35px;
+			}
+			#weatherIcon {
+				width:65px;
+				height:65px;
+			}
+			body {
+				background-image:url("https://static.pexels.com/photos/2946/dawn-nature-sunset-trees.jpg");
+			}
+			#res, #celOrFar, #maxTempVal, #minTempVal, #tempVal {
+				display:none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="h1Bg">
+			<h1 class="text-center h1Style">Weather </h1>
+		</div>
+		<h2 class="text-center allowAccess">Allow me to access your location so that I can tell you the temperature!</h4>
+		<div class="container text-left" id="res">
+			<hr/>
+			<div class="row">
+				<div class="col-md-12 text-center">			
+					<p id="typeOfWeather"></p>
+					<p id="avgTemp"></p>
+					<img id="weatherIcon"/>
+					<span id="weatherSummary"></span>
+					<p id="maxTemp"></p>
+					<p id="minTemp"></p>
+					<p id="celOrFar"></p>
+					<p id="maxTempVal"></p>
+					<p id="minTempVal"></p>
+					<p id="tempVal"></p>
+				</div>
+			</div>
+			<hr/>
+			<button class="btn btn-success" id="celFar">Convert to Fahrenheit / Celsius</button>
+		</div>
+	</body>
+</html>
